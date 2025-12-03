@@ -1,6 +1,6 @@
 ERC20/WETH Price Impact Model
 
-Tracks real swap execution price vs Dexscreener fair value for any ERC20/WETH Uniswap V3 pool.
+Tracks real swap execution price vs Dexscreener fair value for any ERC20/WETH Uniswap V2 pool.
 
 What this model shows
 
