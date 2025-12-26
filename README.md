@@ -14,6 +14,7 @@ Aggregated hourly metrics
 
 Supports memecoins and microcaps with volatile pools
 
+
 Data sources
 
 On-chain swap logs (raw decoded)
@@ -21,6 +22,7 @@ On-chain swap logs (raw decoded)
 Dexscreener fair-value pricing
 
 WETH USD oracle from prices.usd
+
 
 SQL Included
 
