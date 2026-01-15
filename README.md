@@ -12,7 +12,8 @@ The goal is to understand whether trades are moving the market efficiently or cr
 
 - Platform: Dune Analytics  
 - Scope: Uniswap V2 (Ethereum)  
-- Pair type: ERC20/WETH  
+- Pair type: ERC20/WETH
+- Example pair: TOO/WETH  
 
 🔗 Dune dashboard link: [https://dune.com/jayqxr/real-swap-impact-erc20-weth-memecoin-microstructure?utm_source=share&utm_medium=copy&utm_campaign=dashboard]
 
