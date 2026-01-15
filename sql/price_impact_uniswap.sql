@@ -1,4 +1,4 @@
-WITH swap_event AS ( --decodes raw logs into token0/token1 swap amounts
+WITH swap_event AS ( 
     SELECT
         DATE_TRUNC('minute', block_time) AS time_swap,
         contract_address,
@@ -16,7 +16,7 @@ WITH swap_event AS ( --decodes raw logs into token0/token1 swap amounts
         block_time > CURRENT_DATE - INTERVAL '7' day
 ),
 
-price AS ( --WETH minute-by-minute USD prices
+price AS ( 
     SELECT
         "minute",
         price AS quote_token_price_usd
@@ -30,7 +30,7 @@ price AS ( --WETH minute-by-minute USD prices
         "minute" > CURRENT_DATE - INTERVAL '7' day 
 ),
 
-pool_metadata AS ( --pulls Dexscreener fair-value pricing
+pool_metadata AS ( 
     SELECT 
         CAST(json_extract_scalar(response,'$.pairs[0].priceUsd') AS DOUBLE) AS base_token_price_usd,
         json_extract_scalar(response,'$.pairs[0].pairAddress') AS pool_address
