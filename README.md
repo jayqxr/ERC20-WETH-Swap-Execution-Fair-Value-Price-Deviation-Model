@@ -49,7 +49,7 @@ https://dune.com/jayqxr/real-swap-impact-erc20-weth-memecoin-microstructure?utm_
 
 The full SQL query used for this analysis is available in this repository:
 
-
+- [`sql/price_impact_uniswap.sql`](./sql/price_impact_uniswap.sql)  
 
 This query:
 - decodes raw swap events
