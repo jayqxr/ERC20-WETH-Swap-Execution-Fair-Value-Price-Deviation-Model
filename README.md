@@ -1,43 +1,51 @@
-ERC20/WETH Price Impact Model
+# ERC20/WETH Swap Execution vs Fair Value Model
 
-Tracks real swap execution price vs Dexscreener fair value for any ERC20/WETH Uniswap V2 pool.
+Analyzes real swap execution prices for ERC20/WETH Uniswap V2 pools and compares them against fair-value pricing to quantify true market impact and trader pressure.
 
-What this model shows
+## Overview
 
-True buy/sell pressure
+This project reconstructs actual execution prices directly from raw Uniswap V2 swap events and compares them against external fair-value pricing.
 
-Real-time price deviation from fair value
+The goal is to understand whether trades are moving the market efficiently or creating persistent price deviations driven by buy or sell pressure.
 
-Whether traders are moving the market positively or negatively
+## Dashboard
 
-Aggregated hourly metrics
+Platform: Dune Analytics  
+Scope: Uniswap V2 (Ethereum)  
+Pair type: ERC20/WETH  
 
-Supports memecoins and microcaps with volatile pools
+🔗 Dune dashboard link: [https://dune.com/jayqxr/real-swap-impact-erc20-weth-memecoin-microstructure?utm_source=share&utm_medium=copy&utm_campaign=dashboard]
+
+## What This Model Shows
+
+- Real swap execution price derived from on-chain events
+- Fair-value price reference from Dexscreener
+- Execution vs fair-value price deviation
+- Buy vs sell pressure classification
+- Hourly aggregated execution metrics
+
+## Data Sources
+
+- On-chain Uniswap V2 swap events (raw decoded)
+- Dexscreener fair-value pricing
+- WETH USD pricing via prices.usd
+
+## Notes & Limitations
+
+- Analysis focuses on executed swaps only
+- Fair value is treated as an external reference, not ground truth
+- Designed for volatile ERC20/WETH pools (memecoins and microcaps)
+
+## SQL Query
+
+The full SQL query used for this analysis is available in this repository:
+
+sql/price_impact_uniswap.sql
+
+This query:
+- decodes raw swap events
+- reconstructs execution prices
+- classifies directional pressure
+- aggregates metrics on an hourly basis
 
 
-Data sources
-
-On-chain swap logs (raw decoded)
-
-Dexscreener fair-value pricing
-
-WETH USD oracle from prices.usd
-
-
-SQL Included
-
-Multi-source decoding
-
-Real-time implied execution price
-
-Hourly aggregation
-
-Positive/negative deviation fields for visualization
-
-This repo supports a Dune dashboard visualizing:
-
-Hourly buy/sell pressure
-
-Real vs fair value price comparison
-
-Price deviation over time
