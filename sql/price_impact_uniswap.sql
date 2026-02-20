@@ -11,7 +11,7 @@ WITH swap_event AS (
     WHERE
         topic0 = 0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822
     AND 
-        contract_address = 0x9608a52E0b9BC05BFF33BE175D9769C40E5EF600
+        contract_address = 0x69C7bd26512f52bF6F76faB834140D13Dda673Ca
     AND
         block_time > CURRENT_DATE - INTERVAL '7' day
 ),
@@ -36,7 +36,7 @@ pool_metadata AS (
         json_extract_scalar(response,'$.pairs[0].pairAddress') AS pool_address
     FROM (
         SELECT json_parse(
-            http_get('https://api.dexscreener.com/latest/dex/pairs/ethereum/0x9608a52E0b9BC05BFF33BE175D9769C40E5EF600')
+            http_get('https://api.dexscreener.com/latest/dex/pairs/ethereum/0x69C7bd26512f52bF6F76faB834140D13Dda673Ca')
         ) AS response
     )
 ),
@@ -75,16 +75,30 @@ final_cte AS (
         SUM(amount1_in * quote_token_price_usd) AS WETH_price_bought_token1_usd,
         SUM(amount1_out * quote_token_price_usd) AS WETH_price_sold_token1_usd,
         AVG(base_token_price_usd) AS base_token_price_usd,
-        AVG(implied_token0_price_usd) AS implied_token0_price_usd
+        SUM(
+            CASE 
+                WHEN amount0_out > 0 THEN amount1_in * quote_token_price_usd
+                WHEN amount0_in > 0 THEN amount1_out * quote_token_price_usd
+            END
+            )
+            /
+            NULLIF(
+        SUM(
+            CASE 
+                WHEN amount0_out > 0 THEN amount0_out
+                WHEN amount0_in > 0 THEN amount0_in
+            END
+            ), 0
+        ) AS implied_token0_price_usd_vwap
     FROM 
         pre_agg
     GROUP BY 1   
 )
 SELECT
      *,
-     ((implied_token0_price_usd - base_token_price_usd) / base_token_price_usd) * 100 AS price_deviation_pct,
-    CASE WHEN ((implied_token0_price_usd - base_token_price_usd) / base_token_price_usd) * 100 > 0
-         THEN ((implied_token0_price_usd - base_token_price_usd) / base_token_price_usd) * 100 END AS positive_deviation,
-    CASE WHEN ((implied_token0_price_usd - base_token_price_usd) / base_token_price_usd) * 100 <= 0
-         THEN ((implied_token0_price_usd - base_token_price_usd) / base_token_price_usd) * 100 END AS negative_deviation
+     ((implied_token0_price_usd_vwap - base_token_price_usd) / base_token_price_usd) * 100 AS price_deviation_pct,
+    CASE WHEN ((implied_token0_price_usd_vwap - base_token_price_usd) / base_token_price_usd) * 100 > 0
+         THEN ((implied_token0_price_usd_vwap - base_token_price_usd) / base_token_price_usd) * 100 END AS positive_deviation,
+    CASE WHEN ((implied_token0_price_usd_vwap - base_token_price_usd) / base_token_price_usd) * 100 <= 0
+         THEN ((implied_token0_price_usd_vwap - base_token_price_usd) / base_token_price_usd) * 100 END AS negative_deviation
 FROM final_cte;
